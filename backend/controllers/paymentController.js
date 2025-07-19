@@ -19,7 +19,7 @@ export const createOrder = async (req, res) => {
     });
 
     const options = {
-      amount: amount * 100, // amount in paise
+      amount: amount * 100, 
       currency: 'INR',
       receipt: `receipt_order_${Date.now()}`,
     };
@@ -34,7 +34,6 @@ export const createOrder = async (req, res) => {
 export const createStripeSession = async (req, res) => {
   try {
     const { plan, name, email } = req.body;
-    // Define plan prices in INR (Stripe expects paise)
     const PLAN_PRICES = {
       monthly: { amount: 29900, label: 'Monthly Subscription' },
       annually: { amount: 99900, label: 'Annual Subscription' },
@@ -71,9 +70,11 @@ export const createStripeSession = async (req, res) => {
   }
 };
 
-export const stripeWebhook = express.raw({ type: 'application/json' }, async (req, res) => {
+
+export const stripeWebhookHandler = async (req, res) => {
   let event;
-  const endpointSecret = 'whsec_xxx_replace_with_your_webhook_secret_xxx'; // Replace with your Stripe webhook secret
+  const endpointSecret = process.env.STRIPE_SECRET_KEY; // Replace this
+
   try {
     const sig = req.headers['stripe-signature'];
     event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
@@ -85,10 +86,11 @@ export const stripeWebhook = express.raw({ type: 'application/json' }, async (re
     const session = event.data.object;
     const { name, plan } = session.metadata || {};
     const email = session.customer_email;
+
     if (!email || !plan) return res.status(400).send('Missing email or plan');
+
     try {
-      // Only create if not already exists
-      let existing = await Subscriber.findOne({ email, plan });
+      const existing = await Subscriber.findOne({ email, plan });
       if (!existing) {
         await Subscriber.create({
           name: name || '',
@@ -103,5 +105,6 @@ export const stripeWebhook = express.raw({ type: 'application/json' }, async (re
       return res.status(500).send('DB error');
     }
   }
+
   res.json({ received: true });
-}); 
+};
