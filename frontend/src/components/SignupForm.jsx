@@ -41,6 +41,8 @@ const PLANS = [
   },
 ];
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
     if (document.getElementById('razorpay-script')) return resolve(true);
@@ -78,8 +80,7 @@ const SignupForm = () => {
 
     if (form.plan === 'free') {
       try {
-        // const res = await fetch('http://localhost:5000/api/subscribe', {
-        const res = await fetch('http://https://newsletters-fjzl.onrender.com/api/subscribe', {
+        const res = await fetch(`${API_BASE_URL}/api/subscribe`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(form),
@@ -113,9 +114,7 @@ const SignupForm = () => {
       return;
     }
     try {
-      // const orderRes = await fetch('http://localhost:5000/api/payments/create-order', {
-      const orderRes = await fetch('http://https://newsletters-fjzl.onrender.com/api/payments/create-order', {
-
+      const orderRes = await fetch(`${API_BASE_URL}/api/payments/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: selectedPlan.price }),
@@ -125,7 +124,7 @@ const SignupForm = () => {
       const { order } = orderData;
 
       const options = {
-        key: 'rzp_test_oWXgcMskRelZAf',
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_oWXgcMskRelZAf',
         amount: order.amount,
         currency: order.currency,
         name: `Newsletter ${selectedPlan.name}`,
@@ -133,9 +132,7 @@ const SignupForm = () => {
         order_id: order.id,
         handler: async function (response) {
           try {
-            // const subscribeRes = await fetch('http://localhost:5000/api/subscribe', {
-            const subscribeRes = await fetch('http://https://newsletters-fjzl.onrender.com/api/subscribe', {
-
+            const subscribeRes = await fetch(`${API_BASE_URL}/api/subscribe`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -180,9 +177,7 @@ const SignupForm = () => {
     setMessage('');
     setError('');
     try {
-      // const res = await fetch('http://localhost:5000/api/payments/create-stripe-session', {
-      const res = await fetch('http://https://newsletters-fjzl.onrender.com/api/payments/create-stripe-session', {
-
+      const res = await fetch(`${API_BASE_URL}/api/payments/create-stripe-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

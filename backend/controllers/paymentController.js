@@ -41,6 +41,9 @@ export const createStripeSession = async (req, res) => {
     if (!plan || !PLAN_PRICES[plan]) {
       return res.status(400).json({ message: 'Invalid plan selected' });
     }
+    
+    const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+    
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
@@ -57,8 +60,8 @@ export const createStripeSession = async (req, res) => {
         },
       ],
       customer_email: email,
-      success_url: 'http://localhost:5173/thankyou',
-      cancel_url: 'http://localhost:5173/signup',
+      success_url: `${FRONTEND_URL}/thankyou`,
+      cancel_url: `${FRONTEND_URL}/signup`,
       metadata: {
         name,
         plan,
