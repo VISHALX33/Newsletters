@@ -78,7 +78,8 @@ const SignupForm = () => {
 
     if (form.plan === 'free') {
       try {
-        const res = await fetch('http://localhost:5000/api/subscribe', {
+        // const res = await fetch('http://localhost:5000/api/subscribe', {
+        const res = await fetch('http://https://newsletters-fjzl.onrender.com/api/subscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(form),
@@ -112,7 +113,9 @@ const SignupForm = () => {
       return;
     }
     try {
-      const orderRes = await fetch('http://localhost:5000/api/payments/create-order', {
+      // const orderRes = await fetch('http://localhost:5000/api/payments/create-order', {
+      const orderRes = await fetch('http://https://newsletters-fjzl.onrender.com/api/payments/create-order', {
+
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: selectedPlan.price }),
@@ -130,7 +133,9 @@ const SignupForm = () => {
         order_id: order.id,
         handler: async function (response) {
           try {
-            const subscribeRes = await fetch('http://localhost:5000/api/subscribe', {
+            // const subscribeRes = await fetch('http://localhost:5000/api/subscribe', {
+            const subscribeRes = await fetch('http://https://newsletters-fjzl.onrender.com/api/subscribe', {
+
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -175,7 +180,9 @@ const SignupForm = () => {
     setMessage('');
     setError('');
     try {
-      const res = await fetch('http://localhost:5000/api/payments/create-stripe-session', {
+      // const res = await fetch('http://localhost:5000/api/payments/create-stripe-session', {
+      const res = await fetch('http://https://newsletters-fjzl.onrender.com/api/payments/create-stripe-session', {
+
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
