@@ -13,7 +13,7 @@ const corsOptions = {
   origin: [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://your-netlify-app.netlify.app', // Replace with your actual Netlify URL
+    'https://newslettersnodesure.netlify.app/', 
     process.env.FRONTEND_URL
   ].filter(Boolean),
   credentials: true,
